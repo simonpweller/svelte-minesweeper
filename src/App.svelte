@@ -7,17 +7,19 @@
     if (!cell.covered) return;
     rows[cell.rowIndex][cell.colIndex].covered = false;
     if (cell.bombCount === 0) {
-      for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
-        if (!rows[cell.rowIndex + rowOffset]) continue;
-        for (let colOffset = -1; colOffset <= 1; colOffset++) {
-          const neighbour =
-            rows[cell.rowIndex + rowOffset][cell.colIndex + colOffset];
-          if (neighbour) {
-            reveal(neighbour);
-          }
-        }
-      }
+      getNeighbours(cell).forEach(reveal);
     }
+  }
+
+  function getNeighbours(cell) {
+    return [-1, 0, 1]
+      .flatMap((rowOffset) =>
+        [-1, 0, 1].map(
+          (colOffset) =>
+            (rows[cell.rowIndex + rowOffset] || [])[cell.colIndex + colOffset]
+        )
+      )
+      .filter(Boolean);
   }
 </script>
 
