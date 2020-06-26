@@ -4,8 +4,8 @@
   let rows = generate();
 
   function reveal(cell) {
-    if (cell.isOpen) return;
-    rows[cell.rowIndex][cell.colIndex].isOpen = true;
+    if (!cell.covered) return;
+    rows[cell.rowIndex][cell.colIndex].covered = false;
     if (cell.bombCount === 0) {
       for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
         if (!rows[cell.rowIndex + rowOffset]) continue;
