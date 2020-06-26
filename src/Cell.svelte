@@ -10,7 +10,7 @@
     {#if cell.bombCount}{cell.bombCount}{/if}
   </div>
 {:else}
-  <div class="cell closed" on:click={() => dispatch('reveal', { cell })} />
+  <div class="cell closed" on:click={() => dispatch('reveal')} />
 {/if}
 
 <style>
