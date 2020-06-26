@@ -24,6 +24,8 @@
 
     background: #c0c0c0;
     border: 1px solid #a3a3a3;
+
+    cursor: default;
   }
 
   .bomb {
