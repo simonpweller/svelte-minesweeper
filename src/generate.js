@@ -14,6 +14,7 @@ function createRow(rowIndex) {
   return Array.from({ length: 9 }, (_, colIndex) => ({
     rowIndex,
     colIndex,
+    isOpen: false,
     isBomb: false,
     bombCount: 0,
   }));

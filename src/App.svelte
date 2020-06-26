@@ -1,6 +1,12 @@
 <script>
   import generate from "./generate";
-  const rows = generate();
+  import Cell from "./Cell.svelte";
+  let rows = generate();
+
+  function reveal(event) {
+    const { cell } = event.detail;
+    rows[cell.rowIndex][cell.colIndex].isOpen = true;
+  }
 </script>
 
 <main>
@@ -10,9 +16,7 @@
     {#each rows as row}
       <div class="row">
         {#each row as cell}
-          <div class="cell" class:bomb={cell.isBomb}>
-            {#if !cell.isBomb && cell.bombCount}{cell.bombCount}{/if}
-          </div>
+          <Cell {cell} on:reveal={reveal} />
         {/each}
       </div>
     {/each}
@@ -26,24 +30,11 @@
     align-items: center;
   }
 
+  .board {
+    border: 5px solid #a3a3a3;
+  }
+
   .row {
     display: flex;
-  }
-
-  .cell {
-    height: 30px;
-    width: 30px;
-    background: #c7bfc7;
-    border: 3px solid #ffffff;
-    border-right-color: #877f87;
-    border-bottom-color: #877f87;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .bomb {
-    background-image: url("/mine.png");
-    background-size: contain;
   }
 </style>
