@@ -6,7 +6,7 @@
 </script>
 
 <div
-  class="cell"
+  class={`cell ${!cell.covered && !cell.bomb && cell.bombCount && `bombs-${cell.bombCount}`}`}
   class:covered={cell.covered}
   class:bomb={cell.bomb}
   class:flagged={cell.flagged}
@@ -28,10 +28,45 @@
     justify-content: center;
     align-items: center;
 
+    font-family: monospace;
+    font-size: 20px;
+
     background: #c0c0c0;
     border: 1px solid #a3a3a3;
 
     cursor: default;
+  }
+
+  .bombs-1 {
+    color: #0000ff;
+  }
+
+  .bombs-2 {
+    color: #007b00;
+  }
+
+  .bombs-3 {
+    color: #ff0000;
+  }
+
+  .bombs-4 {
+    color: #00007b;
+  }
+
+  .bombs-5 {
+    color: #7b0000;
+  }
+
+  .bombs-6 {
+    color: #007b7b;
+  }
+
+  .bombs-7 {
+    color: #000000;
+  }
+
+  .bombs-8 {
+    color: #7b7b7b;
   }
 
   .bomb {
