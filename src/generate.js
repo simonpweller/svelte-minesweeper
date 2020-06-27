@@ -15,6 +15,7 @@ function createRow(rowIndex) {
     rowIndex,
     colIndex,
     covered: true,
+    flagged: false,
     isBomb: false,
     bombCount: 0,
   }));

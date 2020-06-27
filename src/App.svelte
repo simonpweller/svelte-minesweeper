@@ -4,11 +4,18 @@
   let rows = generate();
 
   function reveal(cell) {
-    if (!cell.covered) return;
+    if (!cell.covered || cell.flagged) return;
     rows[cell.rowIndex][cell.colIndex].covered = false;
     if (cell.bombCount === 0) {
       getNeighbours(cell).forEach(reveal);
     }
+  }
+
+  function toggleFlag(cell) {
+    if (!cell.covered) return;
+    rows[cell.rowIndex][cell.colIndex].flagged = !rows[cell.rowIndex][
+      cell.colIndex
+    ].flagged;
   }
 
   function getNeighbours(cell) {
@@ -30,7 +37,10 @@
     {#each rows as row}
       <div class="row">
         {#each row as cell}
-          <Cell {cell} on:reveal={() => reveal(cell)} />
+          <Cell
+            {cell}
+            on:reveal={() => reveal(cell)}
+            on:toggle-flag={() => toggleFlag(cell)} />
         {/each}
       </div>
     {/each}

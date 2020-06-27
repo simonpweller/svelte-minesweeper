@@ -9,7 +9,12 @@
   class="cell"
   class:covered={cell.covered}
   class:bomb={cell.isBomb}
-  on:click={() => dispatch('reveal')}>
+  class:flagged={cell.flagged}
+  on:click={() => dispatch('reveal')}
+  on:contextmenu={(e) => {
+    dispatch('toggle-flag');
+    e.preventDefault();
+  }}>
   {#if !cell.covered && cell.bombCount}{cell.bombCount}{/if}
 </div>
 
@@ -39,5 +44,9 @@
     border: 3px solid #ffffff;
     border-right-color: #877f87;
     border-bottom-color: #877f87;
+  }
+
+  .flagged {
+    background-image: url("/flag.svg");
   }
 </style>
