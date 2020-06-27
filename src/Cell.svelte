@@ -8,7 +8,7 @@
 <div
   class="cell"
   class:covered={cell.covered}
-  class:bomb={cell.isBomb}
+  class:bomb={cell.bomb}
   class:flagged={cell.flagged}
   on:click={() => dispatch('reveal')}
   on:contextmenu={(e) => {

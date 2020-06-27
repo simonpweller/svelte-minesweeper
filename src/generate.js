@@ -16,7 +16,7 @@ function createRow(rowIndex) {
     colIndex,
     covered: true,
     flagged: false,
-    isBomb: false,
+    bomb: false,
     bombCount: 0,
   }));
 }
@@ -24,8 +24,8 @@ function createRow(rowIndex) {
 function placeBombs(cells, bombsToPlace) {
   if (bombsToPlace === 0) return cells;
   const randomCellIndex = Math.floor(Math.random() * cells.length);
-  if (cells[randomCellIndex].isBomb) return placeBombs(cells, bombsToPlace);
-  cells[randomCellIndex].isBomb = true;
+  if (cells[randomCellIndex].bomb) return placeBombs(cells, bombsToPlace);
+  cells[randomCellIndex].bomb = true;
   return placeBombs(cells, bombsToPlace - 1);
 }
 
@@ -35,7 +35,7 @@ function getBombCount(rows, rowIndex, colIndex) {
     if (!rows[rowIndex + rowOffset]) continue;
     for (let colOffset = -1; colOffset <= 1; colOffset++) {
       const neighbour = rows[rowIndex + rowOffset][colIndex + colOffset];
-      if (neighbour && neighbour.isBomb) {
+      if (neighbour && neighbour.bomb) {
         bombCount++;
       }
     }
