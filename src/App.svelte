@@ -5,7 +5,7 @@
   let gameState = "playing";
 
   function reveal(cell) {
-    if (!cell.covered) return;
+    if (gameState !== "playing" || !cell.covered || cell.flagged) return;
     rows[cell.rowIndex][cell.colIndex].covered = false;
     rows[cell.rowIndex][cell.colIndex].flagged = false;
     if (cell.bombCount === 0) {
@@ -14,7 +14,16 @@
     updateGameState(cell);
   }
 
+  function chord(cell) {
+    if (gameState !== "playing" || cell.flagged) return;
+    const neighbours = getNeighbours(cell);
+    if (cell.bombCount === neighbours.filter((cell) => cell.flagged).length) {
+      neighbours.forEach(reveal);
+    }
+  }
+
   function toggleFlag(cell) {
+    if (gameState !== "playing") return;
     if (!cell.covered) return;
     rows[cell.rowIndex][cell.colIndex].flagged = !rows[cell.rowIndex][
       cell.colIndex
@@ -66,8 +75,9 @@
         {#each row as cell}
           <Cell
             {cell}
-            on:reveal={() => gameState === 'playing' && reveal(cell)}
-            on:toggle-flag={() => gameState === 'playing' && toggleFlag(cell)} />
+            on:reveal={() => reveal(cell)}
+            on:chord={() => chord(cell)}
+            on:toggle-flag={() => toggleFlag(cell)} />
         {/each}
       </div>
     {/each}
