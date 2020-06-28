@@ -5,8 +5,9 @@
   let gameState = "playing";
 
   function reveal(cell) {
-    if (!cell.covered || cell.flagged) return;
+    if (!cell.covered) return;
     rows[cell.rowIndex][cell.colIndex].covered = false;
+    rows[cell.rowIndex][cell.colIndex].flagged = false;
     if (cell.bombCount === 0) {
       getNeighbours(cell).forEach(reveal);
     }

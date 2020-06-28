@@ -10,7 +10,11 @@
   class:covered={cell.covered}
   class:bomb={cell.bomb}
   class:flagged={cell.flagged}
-  on:click={() => dispatch('reveal')}
+  on:click={() => {
+    if (!cell.flagged) {
+      dispatch('reveal');
+    }
+  }}
   on:contextmenu={(e) => {
     dispatch('toggle-flag');
     e.preventDefault();
