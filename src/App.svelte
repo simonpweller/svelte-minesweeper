@@ -11,7 +11,7 @@
     if (cell.bombCount === 0) {
       getNeighbours(cell).forEach(reveal);
     }
-    updateGameState(cell);
+    gameState = getGameState();
   }
 
   function chord(cell) {
@@ -29,10 +29,6 @@
       cell.colIndex
     ].flagged;
     window.navigator.vibrate(50);
-  }
-
-  function updateGameState() {
-    gameState = getGameState();
   }
 
   function getGameState() {
