@@ -1,24 +1,26 @@
-export default function generate() {
-  let rows = Array.from({ length: 9 }, (_, rowIndex) => createRow(rowIndex));
+export default function generate(rowCount = 9, colCount = 9, bombsToPlace = 9) {
+  let rows = Array.from({ length: rowCount }, (_, rowIndex) =>
+    createRow(rowIndex)
+  );
   let cells = rows.reduce((cells, row) => [...cells, ...row], []);
-  placeBombs(cells, 9);
+  placeBombs(cells, bombsToPlace);
 
   cells.forEach((cell) => {
     return (cell.bombCount = getBombCount(rows, cell.rowIndex, cell.colIndex));
   });
 
   return rows;
-}
 
-function createRow(rowIndex) {
-  return Array.from({ length: 9 }, (_, colIndex) => ({
-    rowIndex,
-    colIndex,
-    covered: true,
-    flagged: false,
-    bomb: false,
-    bombCount: 0,
-  }));
+  function createRow(rowIndex) {
+    return Array.from({ length: colCount }, (_, colIndex) => ({
+      rowIndex,
+      colIndex,
+      covered: true,
+      flagged: false,
+      bomb: false,
+      bombCount: 0,
+    }));
+  }
 }
 
 function placeBombs(cells, bombsToPlace) {

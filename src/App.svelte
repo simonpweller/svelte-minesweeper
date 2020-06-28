@@ -1,13 +1,13 @@
 <script>
   import generate from "./generate";
   import Cell from "./Cell.svelte";
-  let rows = generate();
+  let board = generate();
   let gameState = "playing";
 
   function reveal(cell) {
     if (gameState !== "playing" || !cell.covered || cell.flagged) return;
-    rows[cell.rowIndex][cell.colIndex].covered = false;
-    rows[cell.rowIndex][cell.colIndex].flagged = false;
+    board[cell.rowIndex][cell.colIndex].covered = false;
+    board[cell.rowIndex][cell.colIndex].flagged = false;
     if (cell.bombCount === 0) {
       getNeighbours(cell).forEach(reveal);
     }
@@ -25,7 +25,7 @@
   function toggleFlag(cell) {
     if (gameState !== "playing") return;
     if (!cell.covered) return;
-    rows[cell.rowIndex][cell.colIndex].flagged = !rows[cell.rowIndex][
+    board[cell.rowIndex][cell.colIndex].flagged = !board[cell.rowIndex][
       cell.colIndex
     ].flagged;
     window.navigator.vibrate(50);
@@ -34,7 +34,7 @@
   function getGameState() {
     let coveredCells = 0;
     let bombs = 0;
-    for (const row of rows) {
+    for (const row of board) {
       for (const cell of row) {
         if (cell.bomb && !cell.covered) return "lost";
         if (cell.covered) coveredCells++;
@@ -49,10 +49,25 @@
       .flatMap((rowOffset) =>
         [-1, 0, 1].map(
           (colOffset) =>
-            (rows[cell.rowIndex + rowOffset] || [])[cell.colIndex + colOffset]
+            (board[cell.rowIndex + rowOffset] || [])[cell.colIndex + colOffset]
         )
       )
       .filter(Boolean);
+  }
+
+  function startGame(difficulty) {
+    gameState = "playing";
+    switch (difficulty) {
+      case "beginner":
+        board = generate();
+        break;
+      case "intermediate":
+        board = generate(16, 16, 40);
+        break;
+      case "expert":
+        board = generate(16, 30, 99);
+        break;
+    }
   }
 </script>
 
@@ -66,8 +81,13 @@
     <p>You lost!</p>
   {/if}
 
+  <div class="difficulty">
+    <button on:click={() => startGame('beginner')}>Beginner</button>
+    <button on:click={() => startGame('intermediate')}>Intermediate</button>
+    <button on:click={() => startGame('expert')}>Expert</button>
+  </div>
   <div class="board">
-    {#each rows as row}
+    {#each board as row}
       <div class="row">
         {#each row as cell}
           <Cell
@@ -86,6 +106,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .difficulty button {
+    cursor: pointer;
   }
 
   .board {
