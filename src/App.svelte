@@ -28,6 +28,7 @@
     rows[cell.rowIndex][cell.colIndex].flagged = !rows[cell.rowIndex][
       cell.colIndex
     ].flagged;
+    window.navigator.vibrate(50);
   }
 
   function updateGameState() {
