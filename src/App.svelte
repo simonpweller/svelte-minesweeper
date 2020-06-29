@@ -1,8 +1,17 @@
 <script>
   import generate from "./generate";
+  import { timer } from "./stores";
   import Cell from "./Cell.svelte";
   let board = generate();
+  let bombs = 9;
   let gameState = "playing";
+
+  $: if (gameState !== "playing") timer.stop();
+  $: flags = board.reduce(
+    (count, row) => count + row.filter((cell) => cell.flagged).length,
+    0
+  );
+  $: flagsLeft = bombs - flags;
 
   function reveal(cell) {
     if (gameState !== "playing" || !cell.covered || cell.flagged) return;
@@ -57,15 +66,19 @@
 
   function startGame(difficulty) {
     gameState = "playing";
+    timer.reset();
     switch (difficulty) {
       case "beginner":
-        board = generate();
+        board = generate(9, 9, 9);
+        bombs = 9;
         break;
       case "intermediate":
         board = generate(16, 16, 40);
+        bombs = 40;
         break;
       case "expert":
         board = generate(16, 30, 99);
+        bombs = 99;
         break;
     }
   }
@@ -73,13 +86,16 @@
 
 <main>
   <h1>Minesweeper</h1>
-  {#if gameState === 'playing'}
-    <p>Sweep those mines</p>
-  {:else if gameState === 'won'}
-    <p>You won!</p>
-  {:else if gameState === 'lost'}
-    <p>You lost!</p>
-  {/if}
+  <p class="game-state">
+    {#if gameState === 'playing'}
+      <span class="timer">Timer: {$timer}</span>
+      <span>{flagsLeft} flags left</span>
+    {:else if gameState === 'won'}
+      <span>You won in {$timer} seconds!</span>
+    {:else if gameState === 'lost'}
+      <span>You lost after {$timer} seconds!</span>
+    {/if}
+  </p>
 
   <div class="difficulty">
     <button on:click={() => startGame('beginner')}>Beginner</button>
@@ -108,6 +124,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  .game-state {
+    display: flex;
+  }
+
+  .timer {
+    margin-right: 10px;
   }
 
   .difficulty button {
