@@ -86,18 +86,20 @@
     <button on:click={() => startGame('intermediate')}>Intermediate</button>
     <button on:click={() => startGame('expert')}>Expert</button>
   </div>
-  <div class="board">
-    {#each board as row}
-      <div class="row">
-        {#each row as cell}
-          <Cell
-            {cell}
-            on:reveal={() => reveal(cell)}
-            on:chord={() => chord(cell)}
-            on:toggle-flag={() => toggleFlag(cell)} />
-        {/each}
-      </div>
-    {/each}
+  <div class="board-wrapper">
+    <div class="board">
+      {#each board as row}
+        <div class="row">
+          {#each row as cell}
+            <Cell
+              {cell}
+              on:reveal={() => reveal(cell)}
+              on:chord={() => chord(cell)}
+              on:toggle-flag={() => toggleFlag(cell)} />
+          {/each}
+        </div>
+      {/each}
+    </div>
   </div>
 </main>
 
@@ -110,6 +112,10 @@
 
   .difficulty button {
     cursor: pointer;
+  }
+
+  .board-wrapper {
+    margin: auto;
   }
 
   .board {
