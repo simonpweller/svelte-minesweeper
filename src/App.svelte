@@ -4,23 +4,22 @@
   import Cell from "./Cell.svelte";
   let board = generate();
   let bombs = 9;
+  let flags = 0;
+  let coveredCells = 9 * 9;
   let gameState = "playing";
 
   $: if (gameState !== "playing") timer.stop();
-  $: flags = board.reduce(
-    (count, row) => count + row.filter((cell) => cell.flagged).length,
-    0
-  );
   $: flagsLeft = bombs - flags;
 
   function reveal(cell) {
     if (gameState !== "playing" || !cell.covered || cell.flagged) return;
     board[cell.rowIndex][cell.colIndex].covered = false;
     board[cell.rowIndex][cell.colIndex].flagged = false;
+    coveredCells--;
+    gameState = getGameState(cell);
     if (cell.bombCount === 0) {
       getNeighbours(cell).forEach(reveal);
     }
-    gameState = getGameState();
   }
 
   function chord(cell) {
@@ -34,22 +33,14 @@
   function toggleFlag(cell) {
     if (gameState !== "playing") return;
     if (!cell.covered) return;
-    board[cell.rowIndex][cell.colIndex].flagged = !board[cell.rowIndex][
-      cell.colIndex
-    ].flagged;
+    const isFlagged = board[cell.rowIndex][cell.colIndex].flagged;
+    isFlagged ? flags-- : flags++;
+    board[cell.rowIndex][cell.colIndex].flagged = !isFlagged;
     window.navigator.vibrate(50);
   }
 
-  function getGameState() {
-    let coveredCells = 0;
-    let bombs = 0;
-    for (const row of board) {
-      for (const cell of row) {
-        if (cell.bomb && !cell.covered) return "lost";
-        if (cell.covered) coveredCells++;
-        if (cell.bomb) bombs++;
-      }
-    }
+  function getGameState(revealedCell) {
+    if (revealedCell.bomb) return "lost";
     return coveredCells === bombs ? "won" : "playing";
   }
 
@@ -67,18 +58,22 @@
   function startGame(difficulty) {
     gameState = "playing";
     timer.reset();
+    flags = 0;
     switch (difficulty) {
       case "beginner":
         board = generate(9, 9, 9);
         bombs = 9;
+        coveredCells = 9 * 9;
         break;
       case "intermediate":
         board = generate(16, 16, 40);
         bombs = 40;
+        coveredCells = 16 * 16;
         break;
       case "expert":
         board = generate(16, 30, 99);
         bombs = 99;
+        coveredCells = 16 * 30;
         break;
     }
   }
