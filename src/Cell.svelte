@@ -1,21 +1,27 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import Flag from "./Flag.svelte";
+  import Bomb from "./Bomb.svelte";
 
   export let cell;
   const dispatch = createEventDispatcher();
 </script>
 
 <div
-  class={`cell ${!cell.covered && !cell.bomb && cell.bombCount && `bombs-${cell.bombCount}`}`}
+  class={`cell ${!cell.covered && !cell.bomb && cell.bombCount && `bombs bombs-${cell.bombCount}`}`}
   class:covered={cell.covered}
-  class:bomb={cell.bomb}
-  class:flagged={cell.flagged}
   on:click={() => (cell.covered ? dispatch('reveal') : dispatch('chord'))}
   on:contextmenu={(e) => {
     dispatch('toggle-flag');
     e.preventDefault();
   }}>
-  {#if !cell.covered && cell.bombCount}{cell.bombCount}{/if}
+  {#if !cell.covered && !cell.bomb && cell.bombCount}{cell.bombCount}{/if}
+  {#if cell.flagged}
+    <Flag />
+  {/if}
+  {#if !cell.covered && cell.bomb}
+    <Bomb />
+  {/if}
 </div>
 
 <style>
@@ -35,6 +41,10 @@
     border: 1px solid #a3a3a3;
 
     cursor: default;
+  }
+
+  .bombs {
+    user-select: none;
   }
 
   .bombs-1 {
@@ -69,19 +79,10 @@
     color: #7b7b7b;
   }
 
-  .bomb {
-    background-image: url("/mine.png");
-    background-size: contain;
-  }
-
   .covered {
     background: #c7bfc7;
     border: 3px solid #ffffff;
     border-right-color: #877f87;
     border-bottom-color: #877f87;
-  }
-
-  .flagged {
-    background-image: url("/flag.svg");
   }
 </style>
